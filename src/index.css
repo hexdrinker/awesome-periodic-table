@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0b0e14;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: #e0e6ed;
+}
+
+.font-space {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Glassmorphism tooltip */
+.glass-tooltip {
+  background: rgba(34, 38, 47, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(161, 250, 255, 0.1);
+  border-radius: 2px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Navigation active underline */
+.nav-active {
+  border-bottom: 2px solid #a1faff;
+  color: #a1faff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #10131a;
+}
+::-webkit-scrollbar-thumb {
+  background: #22262f;
+  border-radius: 2px;
+}
+
+/* Category bar */
+.category-bar {
+  height: 2px;
+  border-radius: 1px;
+}
+
+/* Control button */
+.ctrl-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  background: rgba(22, 26, 34, 0.7);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #8a9bb0;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  font-family: 'Inter', sans-serif;
+}
+
+.ctrl-btn:hover {
+  background: rgba(161, 250, 255, 0.1);
+  color: #a1faff;
+}
+
+.ctrl-btn.active {
+  background: rgba(161, 250, 255, 0.15);
+  color: #a1faff;
+}
+
+.stability-bar {
+  width: 6px;
+  border-radius: 1px;
+  background: #a1faff;
+  opacity: 0.7;
+}
