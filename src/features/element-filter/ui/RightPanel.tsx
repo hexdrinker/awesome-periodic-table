@@ -1,19 +1,22 @@
-import { CATEGORY_COLORS, elements } from '../../../entities/element'
+import {
+  CATEGORY_COLORS,
+  ELEMENT_CATEGORIES,
+  usePeriodicTableQuery,
+} from '../../../entities/element'
 import type { ElementCategory } from '../../../entities/element'
 import { getCategoryLabel, translations, useAppStore } from '../../../shared'
 
-const FILTER_CATEGORIES: { category: ElementCategory; count: number }[] = [
-  { category: 'noble-gas', count: elements.filter((e) => e.category === 'noble-gas').length },
-  { category: 'alkali-metal', count: elements.filter((e) => e.category === 'alkali-metal').length },
-  { category: 'halogen', count: elements.filter((e) => e.category === 'halogen').length },
-  { category: 'transition-metal', count: elements.filter((e) => e.category === 'transition-metal').length },
-  { category: 'lanthanide', count: elements.filter((e) => e.category === 'lanthanide').length },
-  { category: 'actinide', count: elements.filter((e) => e.category === 'actinide').length },
-]
-
 export function RightPanel() {
   const { filterCategory, setFilterCategory, language } = useAppStore()
+  const { data: elements = [], isLoading, isError } = usePeriodicTableQuery()
   const copy = translations[language]
+  const filterCategories: { category: ElementCategory; count: number }[] = [
+    ...ELEMENT_CATEGORIES.map((category) => ({
+      category,
+      count: elements.filter((element) => element.category === category).length,
+    })),
+  ]
+  const maxCount = Math.max(...filterCategories.map(({ count }) => count), 1)
 
   return (
     <div
@@ -31,19 +34,26 @@ export function RightPanel() {
         >
           {copy.rightPanel.categoryFilters}
         </h3>
+        <div
+          className="mb-4 font-inter tracking-wider"
+          style={{ fontSize: '10px', letterSpacing: '0.08em', color: 'var(--text-subtle)' }}
+        >
+          {isLoading ? copy.rightPanel.loading : isError ? copy.rightPanel.unavailable : copy.rightPanel.live}
+        </div>
         <div className="space-y-4">
-          {FILTER_CATEGORIES.map(({ category, count }) => {
+          {filterCategories.map(({ category, count }) => {
             const color = CATEGORY_COLORS[category]
             const active = filterCategory === category
             return (
               <button
                 key={category}
                 onClick={() => setFilterCategory(active ? null : category)}
+                disabled={isLoading || isError}
                 className="w-full text-left transition-opacity"
                 style={{
                   background: 'none',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: isLoading || isError ? 'default' : 'pointer',
                   opacity: filterCategory && !active ? 0.4 : 1,
                 }}
               >
@@ -65,7 +75,7 @@ export function RightPanel() {
                   <div
                     className="category-bar transition-all duration-300"
                     style={{
-                      width: `${(count / 40) * 100}%`,
+                      width: `${(count / maxCount) * 100}%`,
                       background: color,
                       minWidth: '15%',
                     }}
@@ -85,7 +95,9 @@ export function RightPanel() {
           >
             {copy.rightPanel.totalElements}
           </span>
-          <span className="font-space text-primary font-semibold text-base">118</span>
+          <span className="font-space text-primary font-semibold text-base">
+            {elements.length || (isLoading ? '...' : '0')}
+          </span>
         </div>
         {filterCategory && (
           <button

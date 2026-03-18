@@ -4,7 +4,7 @@ import { OrbitControls, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
-import { ElementCube, elements } from '../../../entities/element'
+import { ElementCube, usePeriodicTableQuery } from '../../../entities/element'
 import { sceneThemePalettes, useAppStore } from '../../../shared'
 import type { ResolvedTheme } from '../../../shared'
 
@@ -76,6 +76,7 @@ function FloorGrid({ theme }: { theme: ResolvedTheme }) {
 
 export function Scene3D({ theme }: { theme: ResolvedTheme }) {
   const palette = sceneThemePalettes[theme]
+  const { data: elements = [] } = usePeriodicTableQuery()
 
   return (
     <>

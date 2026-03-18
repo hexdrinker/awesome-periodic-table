@@ -1,4 +1,4 @@
-import { CATEGORY_COLORS } from '../../../entities/element'
+import { CATEGORY_COLORS, useElementDetailQuery } from '../../../entities/element'
 import { translations, useAppStore } from '../../../shared'
 
 const STABILITY_BARS = [3, 5, 4, 7, 5, 6, 4]
@@ -6,7 +6,20 @@ const STABILITY_BARS = [3, 5, 4, 7, 5, 6, 4]
 export function LeftPanel() {
   const { selectedElement, hoveredElement, language } = useAppStore()
   const el = selectedElement ?? hoveredElement
+  const { data: selectedDetail, isFetching, isError } = useElementDetailQuery(
+    selectedElement?.atomicNumber,
+  )
   const copy = translations[language]
+  const detail = selectedElement ? selectedDetail : null
+  const electronConfig = detail?.electronConfig || el?.electronConfig || ''
+  const weightValue = detail?.atomicWeightText
+    ? `${detail.atomicWeightText} u`
+    : el
+      ? `${formatAtomicWeight(el.atomicWeight)} u`
+      : ''
+  const standardState = el?.standardState ?? null
+  const oxidationStates = detail?.oxidationStates ?? el?.oxidationStates ?? null
+  const physicalDescription = detail?.physicalDescription
 
   return (
     <div className="fixed bottom-24 left-6 z-40 select-none" style={{ maxWidth: '260px' }}>
@@ -53,17 +66,31 @@ export function LeftPanel() {
           </div>
           <div className="mt-2 space-y-1">
             <DataRow label={copy.leftPanel.atomicNumber} value={String(el.atomicNumber)} />
-            <DataRow label={copy.leftPanel.weight} value={`${el.atomicWeight} u`} />
-            {el.meltingPoint && <DataRow label={copy.leftPanel.melting} value={`${el.meltingPoint} K`} />}
-            {el.boilingPoint && <DataRow label={copy.leftPanel.boiling} value={`${el.boilingPoint} K`} />}
-            {el.density && <DataRow label={copy.leftPanel.density} value={`${el.density} g/cm³`} />}
+            <DataRow label={copy.leftPanel.weight} value={weightValue} />
+            {el.meltingPoint && <DataRow label={copy.leftPanel.melting} value={`${formatNumber(el.meltingPoint)} K`} />}
+            {el.boilingPoint && <DataRow label={copy.leftPanel.boiling} value={`${formatNumber(el.boilingPoint)} K`} />}
+            {el.density && <DataRow label={copy.leftPanel.density} value={`${formatNumber(el.density)} g/cm³`} />}
+            {standardState && <DataRow label={copy.leftPanel.standardState} value={standardState} />}
+            {oxidationStates && <DataRow label={copy.leftPanel.oxidationStates} value={oxidationStates} />}
           </div>
           <div
             className="font-inter mt-2 tracking-wider"
             style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}
           >
-            {el.electronConfig}
+            {electronConfig}
           </div>
+          {selectedElement && (
+            <div
+              className="font-inter mt-3"
+              style={{ fontSize: '10px', lineHeight: '1.6', color: 'var(--text-subtle)' }}
+            >
+              {isFetching
+                ? copy.leftPanel.detailLoading
+                : isError
+                  ? copy.leftPanel.detailError
+                  : physicalDescription}
+            </div>
+          )}
         </div>
       )}
 
@@ -116,4 +143,12 @@ function DataRow({ label, value }: { label: string; value: string }) {
       </span>
     </div>
   )
+}
+
+function formatAtomicWeight(value: number) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(3).replace(/\.?0+$/, '')
+}
+
+function formatNumber(value: number) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(3).replace(/\.?0+$/, '')
 }
