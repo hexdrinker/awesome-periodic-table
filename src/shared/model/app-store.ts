@@ -1,8 +1,10 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { Element, ElementCategory } from '../../entities/element/model/elements'
-import type { PhysicalState } from '../../entities/element/model/physical-state'
-import { DEFAULT_FILTER_TEMPERATURE_K } from '../../entities/element/model/physical-state'
+import type { Element, ElementCategory } from '@/entities/element/model/elements'
+import {
+  DEFAULT_FILTER_TEMPERATURE_K,
+  type PhysicalState,
+} from '@/entities/element/model/physical-state'
 
 export type ControlMode = 'rotate' | 'zoom-in' | 'zoom-out' | 'reset' | 'none'
 export type AppLanguage = 'en' | 'ko'

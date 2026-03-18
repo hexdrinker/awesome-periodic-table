@@ -1,5 +1,5 @@
-import { translations, useAppStore } from '../../../shared'
-import type { ControlMode } from '../../../shared'
+import { translations, useAppStore } from '@/shared'
+import type { ControlMode } from '@/shared'
 
 const controls: Array<{
   id: Exclude<ControlMode, 'none'>

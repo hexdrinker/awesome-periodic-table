@@ -1,1 +1,1 @@
-export { Scene3D } from './ui/Scene3D'
+export { Scene3D } from '@/features/periodic-table-scene/ui/Scene3D'

@@ -1,1 +1,1 @@
-export { LeftPanel } from './ui/LeftPanel'
+export { LeftPanel } from '@/features/element-explorer/ui/LeftPanel'

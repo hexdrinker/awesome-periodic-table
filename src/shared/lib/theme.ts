@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useAppStore } from '../model/app-store'
-import type { ThemeMode } from '../model/app-store'
+import { useAppStore } from '@/shared/model/app-store'
+import type { ThemeMode } from '@/shared/model/app-store'
 
 export type ResolvedTheme = 'light' | 'dark'
 

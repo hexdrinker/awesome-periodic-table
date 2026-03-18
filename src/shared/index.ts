@@ -1,9 +1,9 @@
-export type { AppLanguage, ControlMode, ThemeMode } from './model/app-store'
-export { useAppStore } from './model/app-store'
-export { getCategoryLabel, translations } from './lib/i18n'
-export type { ResolvedTheme } from './lib/theme'
+export type { AppLanguage, ControlMode, ThemeMode } from '@/shared/model/app-store'
+export { useAppStore } from '@/shared/model/app-store'
+export { getCategoryLabel, translations } from '@/shared/lib/i18n'
+export type { ResolvedTheme } from '@/shared/lib/theme'
 export {
   resolveTheme,
   sceneThemePalettes,
   useResolvedTheme,
-} from './lib/theme'
+} from '@/shared/lib/theme'

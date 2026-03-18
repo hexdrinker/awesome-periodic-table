@@ -1,1 +1,1 @@
-export { BottomControls } from './ui/BottomControls'
+export { BottomControls } from '@/features/camera-control/ui/BottomControls'

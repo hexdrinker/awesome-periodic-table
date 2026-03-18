@@ -1,1 +1,1 @@
-export { RightPanel } from './ui/RightPanel'
+export { RightPanel } from '@/features/element-filter/ui/RightPanel'

@@ -7,9 +7,9 @@ import {
   getElementStateAtTemperature,
   PHYSICAL_STATES,
   usePeriodicTableQuery,
-} from '../../../entities/element'
-import type { ElementCategory, PhysicalState } from '../../../entities/element'
-import { getCategoryLabel, translations, useAppStore } from '../../../shared'
+} from '@/entities/element'
+import type { ElementCategory, PhysicalState } from '@/entities/element'
+import { getCategoryLabel, translations, useAppStore } from '@/shared'
 
 const PHYSICAL_STATE_COLORS: Record<PhysicalState, string> = {
   solid: '#a1faff',

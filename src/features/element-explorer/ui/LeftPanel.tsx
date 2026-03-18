@@ -1,5 +1,5 @@
-import { CATEGORY_COLORS, useElementDetailQuery } from '../../../entities/element'
-import { translations, useAppStore } from '../../../shared'
+import { CATEGORY_COLORS, useElementDetailQuery } from '@/entities/element'
+import { translations, useAppStore } from '@/shared'
 
 export function LeftPanel() {
   const { selectedElement, hoveredElement, language } = useAppStore()
@@ -104,11 +104,17 @@ export function LeftPanel() {
 
 function DataRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between">
-      <span className="font-inter" style={{ fontSize: '11px', letterSpacing: '0.06em', color: 'var(--text-subtle)' }}>
+    <div className="grid grid-cols-[auto,minmax(0,1fr)] items-start gap-x-4">
+      <span
+        className="font-inter shrink-0"
+        style={{ fontSize: '11px', letterSpacing: '0.06em', color: 'var(--text-subtle)' }}
+      >
         {label}
       </span>
-      <span className="font-inter" style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+      <span
+        className="font-inter min-w-0 text-right break-words"
+        style={{ fontSize: '11px', color: 'var(--text-secondary)', overflowWrap: 'anywhere' }}
+      >
         {value}
       </span>
     </div>

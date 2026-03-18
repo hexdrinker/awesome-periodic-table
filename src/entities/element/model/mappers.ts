@@ -2,7 +2,7 @@ import type {
   PubChemElementDetailResponse,
   PubChemPeriodicTableResponse,
   PubChemSection,
-} from '../api/pubchem'
+} from '@/entities/element/api/pubchem'
 import type { Element, ElementCategory, ElementDetail } from './elements'
 
 const COLUMN_INDEX = {

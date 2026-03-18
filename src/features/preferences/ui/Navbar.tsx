@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { translations, useAppStore } from '../../../shared'
-import type { ThemeMode } from '../../../shared'
+import { translations, useAppStore } from '@/shared'
+import type { ThemeMode } from '@/shared'
 
 const tabs = ['table', 'isotopes', 'lab'] as const
 const languageOptions = ['en', 'ko'] as const

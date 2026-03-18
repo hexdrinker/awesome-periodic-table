@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchElementDetail, fetchPeriodicTable } from '../api/pubchem'
+import { fetchElementDetail, fetchPeriodicTable } from '@/entities/element/api/pubchem'
 import { mapElementDetailResponse, mapPeriodicTableResponse } from './mappers'
 
 export const elementQueryKeys = {

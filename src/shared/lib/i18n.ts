@@ -1,5 +1,5 @@
-import type { ElementCategory } from '../../entities/element/model/elements'
-import type { AppLanguage } from '../model/app-store'
+import type { ElementCategory } from '@/entities/element/model/elements'
+import type { AppLanguage } from '@/shared/model/app-store'
 
 const categoryLabels: Record<AppLanguage, Record<ElementCategory, string>> = {
   en: {

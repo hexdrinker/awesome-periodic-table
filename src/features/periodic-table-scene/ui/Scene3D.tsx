@@ -4,9 +4,9 @@ import { OrbitControls, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
-import { ElementCube, usePeriodicTableQuery } from '../../../entities/element'
-import { sceneThemePalettes, useAppStore } from '../../../shared'
-import type { ResolvedTheme } from '../../../shared'
+import { ElementCube, usePeriodicTableQuery } from '@/entities/element'
+import { sceneThemePalettes, useAppStore } from '@/shared'
+import type { ResolvedTheme } from '@/shared'
 
 const TABLE_CAMERA_POS = new THREE.Vector3(10.5, 15.5, 19.5)
 const TABLE_CAMERA_TARGET = new THREE.Vector3(10.5, 0.2, 4.8)
