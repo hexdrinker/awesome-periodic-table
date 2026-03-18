@@ -15,6 +15,7 @@ import {
 import { Navbar } from '@/features/preferences'
 import { navigateToHome } from '@/shared/lib/router'
 import { AtomOrbitalDisplay } from './AtomOrbitalDisplay'
+import { getAtomStructureGuide, getShellGuides, getElectronShellDistribution } from './atomStructure'
 
 interface ElementDetailPageProps {
   atomicNumber: number
@@ -55,6 +56,7 @@ const DETAIL_COPY = {
     shellCount: 'Shells',
     shellDistribution: 'Electron Shell Distribution',
     shellDistributionTooltip: 'Electrons arranged by principal energy level from the nucleus outward.',
+    structureGuideLabel: 'Why The Layers Look Like This',
     stabilityCaption: 'Estimated from periodic trends and known physical state.',
     stabilityLabel: 'Stability',
     stateTooltip: 'The most common physical state of the pure element under standard conditions.',
@@ -87,6 +89,7 @@ const DETAIL_COPY = {
     shellCount: '전자 껍질',
     shellDistribution: '전자 껍질 분포',
     shellDistributionTooltip: '원자핵을 중심으로 바깥쪽 에너지 준위에 전자가 어떻게 나뉘는지 보여줍니다.',
+    structureGuideLabel: '왜 이런 층 구조가 될까?',
     stabilityCaption: '주기율표 경향과 알려진 물성값을 바탕으로 추정했습니다.',
     stabilityLabel: '안정성',
     stateTooltip: '표준 상태에서 가장 일반적으로 관찰되는 물리적 상태입니다.',
@@ -118,7 +121,16 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
   const accentColor = element ? CATEGORY_COLORS[element.category] : 'var(--accent)'
   const facts = buildFacts(element, detail, language, copy, content)
   const summary = createSummary(detail?.physicalDescription, language)
+  const electronConfig = detail?.electronConfig || element?.electronConfig || '—'
   const shellSummary = element ? getShellSummary(element.atomicNumber, language) : []
+  const structureGuide = element
+    ? getAtomStructureGuide({
+        atomicNumber: element.atomicNumber,
+        electronConfig,
+        language,
+        symbol: element.symbol,
+      })
+    : null
   const handleBackToTable = () => {
     setSelectedElement(null)
     setHoveredElement(null)
@@ -213,11 +225,37 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {shellSummary.map((shell) => (
                     <div key={shell.label} className="detail-shell-summary">
-                      <span className="detail-shell-label">{shell.label}</span>
+                      <div className="detail-shell-head">
+                        <span className="detail-shell-label">{shell.label}</span>
+                        {shell.isOutermost ? (
+                          <span className="detail-shell-badge">
+                            {language === 'ko' ? '최외각' : 'Outermost'}
+                          </span>
+                        ) : null}
+                      </div>
                       <span className="detail-shell-value">{shell.value}</span>
+                      <p className="detail-shell-description">{shell.description}</p>
                     </div>
                   ))}
                 </div>
+
+                {structureGuide ? (
+                  <section className="detail-structure-guide mt-5">
+                    <div className="detail-note-title">{content.structureGuideLabel}</div>
+                    <p className="detail-structure-copy">{structureGuide.reason}</p>
+                    <div className="detail-structure-pills">
+                      <div className="detail-structure-pill">
+                        <span>{content.configurationLabel}</span>
+                        <strong>{electronConfig}</strong>
+                      </div>
+                      <div className="detail-structure-pill">
+                        <span>{language === 'ko' ? '가장 바깥 껍질' : 'Outermost shell'}</span>
+                        <strong>{structureGuide.outerShell}</strong>
+                      </div>
+                    </div>
+                    <p className="detail-structure-footnote">{structureGuide.modelNote}</p>
+                  </section>
+                ) : null}
               </section>
 
               <section
@@ -447,7 +485,7 @@ function buildFacts(
       label: content.shellDistribution,
       tooltip: content.shellDistributionTooltip,
       tooltipTitle: content.shellDistribution,
-      value: getShellDistribution(element.atomicNumber).join(' • '),
+      value: getElectronShellDistribution(element.atomicNumber).join(' • '),
     },
     {
       accent: '#b8ff84',
@@ -510,52 +548,7 @@ function createSummary(description: string | null | undefined, language: 'en' | 
 }
 
 function getShellSummary(atomicNumber: number, language: 'en' | 'ko') {
-  return getShellDistribution(atomicNumber).map((count, index) => ({
-    label: `${['K', 'L', 'M', 'N', 'O', 'P', 'Q'][index]} ${index + 1}`,
-    value:
-      language === 'ko'
-        ? `${count} 전자`
-        : `${count} ${count === 1 ? 'electron' : 'electrons'}`,
-  }))
-}
-
-function getShellDistribution(atomicNumber: number) {
-  const shellCounts = new Array<number>(7).fill(0)
-  const orbitals = [
-    ['1s', 2],
-    ['2s', 2],
-    ['2p', 6],
-    ['3s', 2],
-    ['3p', 6],
-    ['4s', 2],
-    ['3d', 10],
-    ['4p', 6],
-    ['5s', 2],
-    ['4d', 10],
-    ['5p', 6],
-    ['6s', 2],
-    ['4f', 14],
-    ['5d', 10],
-    ['6p', 6],
-    ['7s', 2],
-    ['5f', 14],
-    ['6d', 10],
-    ['7p', 6],
-  ] as const
-  let remaining = atomicNumber
-
-  for (const [orbital, capacity] of orbitals) {
-    if (remaining <= 0) {
-      break
-    }
-
-    const shellIndex = Number(orbital[0]) - 1
-    const fillCount = Math.min(remaining, capacity)
-    shellCounts[shellIndex] += fillCount
-    remaining -= fillCount
-  }
-
-  return shellCounts.filter((count) => count > 0)
+  return getShellGuides(atomicNumber, language)
 }
 
 function getStabilityLevel(element: Element) {

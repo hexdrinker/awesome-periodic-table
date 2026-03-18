@@ -1,28 +1,5 @@
 import type { CSSProperties } from 'react'
-
-const ORBITAL_SEQUENCE = [
-  ['1s', 2],
-  ['2s', 2],
-  ['2p', 6],
-  ['3s', 2],
-  ['3p', 6],
-  ['4s', 2],
-  ['3d', 10],
-  ['4p', 6],
-  ['5s', 2],
-  ['4d', 10],
-  ['5p', 6],
-  ['6s', 2],
-  ['4f', 14],
-  ['5d', 10],
-  ['6p', 6],
-  ['7s', 2],
-  ['5f', 14],
-  ['6d', 10],
-  ['7p', 6],
-] as const
-
-const SHELL_LABELS = ['K', 'L', 'M', 'N', 'O', 'P', 'Q']
+import { SHELL_LABELS, getElectronShellDistribution } from './atomStructure'
 
 interface AtomOrbitalDisplayProps {
   accentColor: string
@@ -90,22 +67,4 @@ export function AtomOrbitalDisplay({
       </div>
     </div>
   )
-}
-
-function getElectronShellDistribution(atomicNumber: number) {
-  const shellCounts = new Array<number>(7).fill(0)
-  let remainingElectrons = atomicNumber
-
-  for (const [orbital, capacity] of ORBITAL_SEQUENCE) {
-    if (remainingElectrons <= 0) {
-      break
-    }
-
-    const shellIndex = Number(orbital[0]) - 1
-    const filled = Math.min(remainingElectrons, capacity)
-    shellCounts[shellIndex] += filled
-    remainingElectrons -= filled
-  }
-
-  return shellCounts.filter((count) => count > 0)
 }
