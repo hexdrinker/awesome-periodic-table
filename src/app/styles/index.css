@@ -206,6 +206,127 @@ body {
   border-radius: 1px;
 }
 
+.filter-section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.filter-section-toggle-mark {
+  color: var(--text-muted);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.filter-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 74px;
+  padding: 12px;
+  border: none;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--filter-chip-color) 12%, transparent), transparent 72%),
+    var(--app-bg-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--filter-chip-color) 18%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.filter-chip:hover {
+  transform: translateY(-1px);
+  color: var(--text-primary);
+}
+
+.filter-chip.active {
+  color: var(--text-primary);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--filter-chip-color) 18%, transparent), transparent 72%),
+    var(--app-bg-card);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--filter-chip-color) 42%, transparent),
+    0 12px 24px var(--shadow-glow);
+}
+
+.filter-chip:disabled {
+  cursor: default;
+  opacity: 0.5;
+  transform: none;
+}
+
+.filter-ghost-button {
+  padding: 9px 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--app-bg-soft);
+  color: var(--accent);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.filter-ghost-button:hover {
+  background: var(--app-bg-card);
+  color: var(--text-primary);
+}
+
+.filter-ghost-button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.temperature-slider {
+  width: 100%;
+  height: 6px;
+  appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #74c2e1 0%, #ffd166 50%, #ff59e3 100%);
+  outline: none;
+}
+
+.temperature-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-primary);
+  box-shadow: 0 0 0 4px var(--app-bg-elev), 0 10px 24px var(--shadow-glow);
+  cursor: pointer;
+}
+
+.temperature-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-primary);
+  box-shadow: 0 0 0 4px var(--app-bg-elev), 0 10px 24px var(--shadow-glow);
+  cursor: pointer;
+}
+
+.temperature-slider:disabled {
+  opacity: 0.45;
+}
+
 .ctrl-btn {
   display: flex;
   flex-direction: column;

@@ -6,6 +6,7 @@ import type { LineSegments, Mesh } from 'three'
 import { useAppStore, getCategoryLabel, translations } from '../../../shared'
 import type { Element } from '../model/elements'
 import { CATEGORY_COLORS } from '../model/elements'
+import { getElementStateAtTemperature } from '../model/physical-state'
 
 interface ElementCubeProps {
   element: Element
@@ -24,14 +25,24 @@ export function ElementCube({ element }: ElementCubeProps) {
     setSelectedElement,
     selectedElement,
     filterCategory,
+    filterStates,
+    filterTemperature,
     language,
   } = useAppStore()
   const copy = translations[language]
 
   const catColor = CATEGORY_COLORS[element.category]
   const isSelected = selectedElement?.atomicNumber === element.atomicNumber
-  const isFiltered =
-    filterCategory !== null && element.category !== filterCategory
+  const stateAtTemperature = useMemo(
+    () => getElementStateAtTemperature(element, filterTemperature),
+    [element, filterTemperature],
+  )
+  const matchesCategory =
+    filterCategory === null || element.category === filterCategory
+  const matchesPhysicalState =
+    filterStates.length === 0 ||
+    (stateAtTemperature !== 'unknown' && filterStates.includes(stateAtTemperature))
+  const isFiltered = !matchesCategory || !matchesPhysicalState
 
   const x = element.xPos * SPACING
   const y = 0
@@ -263,7 +274,6 @@ export function ElementCube({ element }: ElementCubeProps) {
           : element.atomicWeight}
       </Text>
 
-      {/* Hover tooltip */}
       {(hovered || isSelected) && !isFiltered && (
         <Html
           position={[0, CUBE_HEIGHT + 0.5, 0]}
