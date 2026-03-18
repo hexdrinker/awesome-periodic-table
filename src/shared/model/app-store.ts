@@ -4,7 +4,7 @@ import type { Element, ElementCategory } from '../../entities/element/model/elem
 import type { PhysicalState } from '../../entities/element/model/physical-state'
 import { DEFAULT_FILTER_TEMPERATURE_K } from '../../entities/element/model/physical-state'
 
-export type ControlMode = 'rotate' | 'orbit' | 'zoom-in' | 'zoom-out' | 'reset' | 'none'
+export type ControlMode = 'rotate' | 'zoom-in' | 'zoom-out' | 'reset' | 'none'
 export type AppLanguage = 'en' | 'ko'
 export type ThemeMode = 'system' | 'dark' | 'light'
 

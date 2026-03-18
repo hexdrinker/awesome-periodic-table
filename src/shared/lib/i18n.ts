@@ -97,7 +97,6 @@ export const translations = {
       zoomIn: 'ZOOM IN',
       zoomOut: 'ZOOM OUT',
       rotate: 'ROTATE',
-      orbit: 'ORBIT',
       reset: 'RESET',
     },
     tooltip: {
@@ -170,7 +169,6 @@ export const translations = {
       zoomIn: '확대',
       zoomOut: '축소',
       rotate: '회전',
-      orbit: '궤도',
       reset: '초기화',
     },
     tooltip: {
