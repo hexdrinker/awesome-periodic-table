@@ -71,6 +71,7 @@ export function BottomControls() {
       setAutoRotate(false)
       setTimeout(() => setControlMode('none'), 2000)
     } else {
+      setAutoRotate(false)
       setControlMode(controlMode === id ? 'none' : id)
     }
   }

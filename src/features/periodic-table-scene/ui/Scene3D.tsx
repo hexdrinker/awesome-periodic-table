@@ -17,6 +17,7 @@ function CameraController() {
   const { controlMode, autoRotate, setControlMode } = useAppStore()
   const initialCameraPos = TABLE_CAMERA_POS
   const cameraTarget = TABLE_CAMERA_TARGET
+  const isManualControlMode = controlMode === 'none'
 
   useEffect(() => {
     camera.position.copy(initialCameraPos)
@@ -49,12 +50,27 @@ function CameraController() {
   return (
     <OrbitControls
       ref={controlsRef}
+      makeDefault
       target={cameraTarget}
+      enabled={controlMode !== 'reset'}
       enableDamping
+      enablePan={isManualControlMode}
+      enableRotate={isManualControlMode}
+      enableZoom={controlMode !== 'zoom-in' && controlMode !== 'zoom-out'}
       dampingFactor={0.06}
+      screenSpacePanning
       autoRotate={autoRotate || controlMode === 'rotate'}
       autoRotateSpeed={1}
       rotateSpeed={1}
+      mouseButtons={{
+        LEFT: THREE.MOUSE.ROTATE,
+        MIDDLE: THREE.MOUSE.DOLLY,
+        RIGHT: THREE.MOUSE.PAN,
+      }}
+      touches={{
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_PAN,
+      }}
       maxPolarAngle={Math.PI - 0.01}
       minPolarAngle={0.01}
       minDistance={6}
