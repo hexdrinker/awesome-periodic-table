@@ -1,9 +1,9 @@
 import { useRef, useState, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Text, Html } from '@react-three/drei'
+import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 import type { LineSegments, Mesh } from 'three'
-import { useAppStore, getCategoryLabel, translations } from '../../../shared'
+import { useAppStore } from '../../../shared'
 import type { Element } from '../model/elements'
 import { CATEGORY_COLORS } from '../model/elements'
 import { getElementStateAtTemperature } from '../model/physical-state'
@@ -27,9 +27,7 @@ export function ElementCube({ element }: ElementCubeProps) {
     filterCategory,
     filterStates,
     filterTemperature,
-    language,
   } = useAppStore()
-  const copy = translations[language]
 
   const catColor = CATEGORY_COLORS[element.category]
   const isSelected = selectedElement?.atomicNumber === element.atomicNumber
@@ -273,47 +271,6 @@ export function ElementCube({ element }: ElementCubeProps) {
             : element.atomicWeight.toFixed(3)
           : element.atomicWeight}
       </Text>
-
-      {(hovered || isSelected) && !isFiltered && (
-        <Html
-          position={[0, CUBE_HEIGHT + 0.5, 0]}
-          center
-          distanceFactor={8}
-          zIndexRange={[100, 0]}
-        >
-          <div className='glass-tooltip px-3 py-2 min-w-[130px]'>
-            <div
-              className='text-xs font-space font-semibold tracking-wider mb-1'
-              style={{ color: catColor }}
-            >
-              {element.symbol} — {element.atomicNumber}
-            </div>
-            <div className='text-sm font-space font-medium' style={{ color: 'var(--text-primary)' }}>
-              {element.name}
-            </div>
-            <div
-              className='text-xs mt-1 font-inter'
-              style={{ fontSize: '10px', color: 'var(--text-muted)' }}
-            >
-              {element.atomicWeight} u
-            </div>
-            {element.meltingPoint && (
-              <div
-                className='text-xs font-inter'
-                style={{ fontSize: '10px', color: 'var(--text-subtle)' }}
-              >
-                {copy.tooltip.meltingPoint}: {element.meltingPoint} K
-              </div>
-            )}
-            <div
-              className='text-xs font-inter mt-1'
-              style={{ fontSize: '9px', letterSpacing: '0.05em', color: 'var(--text-subtle)' }}
-            >
-              {getCategoryLabel(element.category, language)}
-            </div>
-          </div>
-        </Html>
-      )}
     </group>
   )
 }
