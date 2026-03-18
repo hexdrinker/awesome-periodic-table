@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { BottomControls } from '@/features/camera-control'
 import { LeftPanel } from '@/features/element-explorer'
@@ -37,8 +37,15 @@ function LoadingFallback() {
 }
 
 export function HomePage() {
+  const setSelectedElement = useAppStore((state) => state.setSelectedElement)
+  const setHoveredElement = useAppStore((state) => state.setHoveredElement)
   const resolvedTheme = useResolvedTheme()
   const palette = sceneThemePalettes[resolvedTheme]
+
+  useEffect(() => {
+    setSelectedElement(null)
+    setHoveredElement(null)
+  }, [setHoveredElement, setSelectedElement])
 
   return (
     <div className="ui-shell" style={{ width: '100vw', height: '100vh', background: palette.background, position: 'relative' }}>

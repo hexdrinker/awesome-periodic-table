@@ -97,6 +97,7 @@ const DETAIL_COPY = {
 export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
   const language = useAppStore((state) => state.language)
   const setSelectedElement = useAppStore((state) => state.setSelectedElement)
+  const setHoveredElement = useAppStore((state) => state.setHoveredElement)
   const resolvedTheme = useResolvedTheme()
   const palette = sceneThemePalettes[resolvedTheme]
   const copy = translations[language]
@@ -116,6 +117,11 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
   const facts = buildFacts(element, detail, language, copy, content)
   const summary = createSummary(detail?.physicalDescription, language)
   const shellSummary = element ? getShellSummary(element.atomicNumber, language) : []
+  const handleBackToTable = () => {
+    setSelectedElement(null)
+    setHoveredElement(null)
+    navigateToHome()
+  }
 
   return (
     <div
@@ -136,22 +142,19 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
       <div className="h-full overflow-y-auto pt-16">
         <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-5 py-5 md:px-8 md:py-8">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="button"
-            className="detail-nav-button"
-            onClick={() => {
-              setSelectedElement(element)
-              navigateToHome()
-            }}
-          >
-            {content.backToTable}
-          </button>
-          <div
-            className="font-inter tracking-[0.28em] uppercase"
-            style={{ fontSize: '11px', color: 'var(--text-muted)' }}
-          >
-            {copy.brand}
-          </div>
+            <button
+              type="button"
+              className="detail-nav-button"
+              onClick={handleBackToTable}
+            >
+              {content.backToTable}
+            </button>
+            <div
+              className="font-inter tracking-[0.28em] uppercase"
+              style={{ fontSize: '11px', color: 'var(--text-muted)' }}
+            >
+              {copy.brand}
+            </div>
           </div>
 
           {isElementsLoading ? (
