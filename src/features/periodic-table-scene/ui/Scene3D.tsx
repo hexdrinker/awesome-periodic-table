@@ -129,7 +129,7 @@ export function Scene3D({ theme }: { theme: ResolvedTheme }) {
       <FloorGrid theme={theme} />
 
       {elements.map((el) => (
-        <ElementCube key={el.atomicNumber} element={el} />
+        <ElementCube key={el.atomicNumber} element={el} theme={theme} />
       ))}
 
       <CameraController />

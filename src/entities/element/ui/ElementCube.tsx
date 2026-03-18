@@ -5,18 +5,20 @@ import * as THREE from 'three'
 import type { LineSegments, Mesh } from 'three'
 import { useAppStore } from '@/shared'
 import { navigateToElementDetail } from '@/shared/lib/router'
+import type { ResolvedTheme } from '@/shared/lib/theme'
 import { CATEGORY_COLORS, type Element } from '@/entities/element/model/elements'
 import { getElementStateAtTemperature } from '@/entities/element/model/physical-state'
 
 interface ElementCubeProps {
   element: Element
+  theme: ResolvedTheme
 }
 
 const SPACING = 1.14
 const CUBE_SIZE = 0.84
 const CUBE_HEIGHT = 0.84
 
-export function ElementCube({ element }: ElementCubeProps) {
+export function ElementCube({ element, theme }: ElementCubeProps) {
   const meshRef = useRef<Mesh>(null)
   const outlineRef = useRef<LineSegments>(null)
   const [hovered, setHovered] = useState(false)
@@ -30,6 +32,7 @@ export function ElementCube({ element }: ElementCubeProps) {
   } = useAppStore()
 
   const catColor = CATEGORY_COLORS[element.category]
+  const isLightTheme = theme === 'light'
   const isSelected = selectedElement?.atomicNumber === element.atomicNumber
   const stateAtTemperature = useMemo(
     () => getElementStateAtTemperature(element, filterTemperature),
@@ -47,10 +50,14 @@ export function ElementCube({ element }: ElementCubeProps) {
   const z = element.yPos * SPACING
 
   const targetScale = isSelected ? 1.05 : 1.0
-  const baseEmissive = isFiltered ? 0.04 : 0.58
-  const targetEmissive = isSelected ? 0.78 : baseEmissive
-  const baseOpacity = isFiltered ? 0.26 : 0.76
-  const targetOpacity = isSelected ? 0.84 : baseOpacity
+  const baseEmissive = isFiltered ? 0.04 : isLightTheme ? 0.34 : 0.58
+  const targetEmissive = isSelected
+    ? isLightTheme
+      ? 0.5
+      : 0.78
+    : baseEmissive
+  const baseOpacity = isFiltered ? 0.26 : isLightTheme ? 0.88 : 0.76
+  const targetOpacity = isSelected ? (isLightTheme ? 0.94 : 0.84) : baseOpacity
   const targetOutlineOpacity =
     hovered || isSelected ? 0.95 : isFiltered ? 0.12 : 0.48
   const outlineColor = useMemo(() => {
@@ -63,30 +70,45 @@ export function ElementCube({ element }: ElementCubeProps) {
   }, [catColor, hovered, isFiltered, isSelected])
 
   const color = useMemo(() => new THREE.Color(catColor), [catColor])
-  const baseColor = useMemo(() => new THREE.Color('#1a1f2a'), [])
+  const baseColor = useMemo(
+    () => new THREE.Color(isLightTheme ? '#111827' : '#1a1f2a'),
+    [isLightTheme],
+  )
   const rightFaceColor = useMemo(
-    () => baseColor.clone().lerp(color, isFiltered ? 0.02 : 0.08),
-    [baseColor, color, isFiltered],
+    () =>
+      baseColor
+        .clone()
+        .lerp(color, isFiltered ? 0.02 : isLightTheme ? 0.12 : 0.08),
+    [baseColor, color, isFiltered, isLightTheme],
   )
   const leftFaceColor = useMemo(
-    () => baseColor.clone().lerp(color, isFiltered ? 0.01 : 0.04),
-    [baseColor, color, isFiltered],
+    () =>
+      baseColor
+        .clone()
+        .lerp(color, isFiltered ? 0.01 : isLightTheme ? 0.08 : 0.04),
+    [baseColor, color, isFiltered, isLightTheme],
   )
   const topFaceColor = useMemo(
-    () => baseColor.clone().lerp(color, isFiltered ? 0.03 : 0.14),
-    [baseColor, color, isFiltered],
+    () =>
+      baseColor
+        .clone()
+        .lerp(color, isFiltered ? 0.03 : isLightTheme ? 0.18 : 0.14),
+    [baseColor, color, isFiltered, isLightTheme],
   )
   const bottomFaceColor = useMemo(
-    () => baseColor.clone().offsetHSL(0, 0, -0.08),
-    [baseColor],
+    () => baseColor.clone().offsetHSL(0, 0, isLightTheme ? -0.06 : -0.08),
+    [baseColor, isLightTheme],
   )
   const frontFaceColor = useMemo(
-    () => baseColor.clone().lerp(color, isFiltered ? 0.01 : 0.05),
-    [baseColor, color, isFiltered],
+    () =>
+      baseColor
+        .clone()
+        .lerp(color, isFiltered ? 0.01 : isLightTheme ? 0.09 : 0.05),
+    [baseColor, color, isFiltered, isLightTheme],
   )
   const backFaceColor = useMemo(
-    () => baseColor.clone().offsetHSL(0, 0, -0.03),
-    [baseColor],
+    () => baseColor.clone().offsetHSL(0, 0, isLightTheme ? -0.02 : -0.03),
+    [baseColor, isLightTheme],
   )
 
   useFrame((_, delta) => {
@@ -147,78 +169,78 @@ export function ElementCube({ element }: ElementCubeProps) {
           color={isFiltered ? '#111418' : rightFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive}
-          roughness={0.38}
+          roughness={isLightTheme ? 0.5 : 0.38}
           metalness={0.22}
           clearcoat={1}
-          clearcoatRoughness={0.34}
+          clearcoatRoughness={isLightTheme ? 0.48 : 0.34}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.56}
+          reflectivity={isLightTheme ? 0.36 : 0.56}
         />
         <meshPhysicalMaterial
           attach='material-1'
           color={isFiltered ? '#101319' : leftFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive * 0.55}
-          roughness={0.42}
+          roughness={isLightTheme ? 0.52 : 0.42}
           metalness={0.18}
           clearcoat={0.85}
-          clearcoatRoughness={0.4}
+          clearcoatRoughness={isLightTheme ? 0.5 : 0.4}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.48}
+          reflectivity={isLightTheme ? 0.3 : 0.48}
         />
         <meshPhysicalMaterial
           attach='material-2'
           color={isFiltered ? '#171c24' : topFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive * 0.4}
-          roughness={0.34}
+          roughness={isLightTheme ? 0.44 : 0.34}
           metalness={0.16}
           clearcoat={1}
-          clearcoatRoughness={0.24}
+          clearcoatRoughness={isLightTheme ? 0.36 : 0.24}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.6}
+          reflectivity={isLightTheme ? 0.4 : 0.6}
         />
         <meshPhysicalMaterial
           attach='material-3'
           color={isFiltered ? '#0d1015' : bottomFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive * 0.15}
-          roughness={0.48}
+          roughness={isLightTheme ? 0.58 : 0.48}
           metalness={0.14}
           clearcoat={0.6}
-          clearcoatRoughness={0.45}
+          clearcoatRoughness={isLightTheme ? 0.56 : 0.45}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.36}
+          reflectivity={isLightTheme ? 0.24 : 0.36}
         />
         <meshPhysicalMaterial
           attach='material-4'
           color={isFiltered ? '#111418' : frontFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive * 0.72}
-          roughness={0.32}
+          roughness={isLightTheme ? 0.46 : 0.32}
           metalness={0.2}
           clearcoat={1}
-          clearcoatRoughness={0.28}
+          clearcoatRoughness={isLightTheme ? 0.42 : 0.28}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.52}
+          reflectivity={isLightTheme ? 0.34 : 0.52}
         />
         <meshPhysicalMaterial
           attach='material-5'
           color={isFiltered ? '#0f1218' : backFaceColor}
           emissive={color}
           emissiveIntensity={targetEmissive * 0.2}
-          roughness={0.44}
+          roughness={isLightTheme ? 0.54 : 0.44}
           metalness={0.16}
           clearcoat={0.7}
-          clearcoatRoughness={0.42}
+          clearcoatRoughness={isLightTheme ? 0.52 : 0.42}
           transparent
           opacity={targetOpacity}
-          reflectivity={0.4}
+          reflectivity={isLightTheme ? 0.28 : 0.4}
         />
       </mesh>
 
