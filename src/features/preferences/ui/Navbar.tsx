@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { translations } from '../lib/i18n'
-import { useStore } from '../store/useStore'
-import type { ThemeMode } from '../store/useStore'
+import { translations, useAppStore } from '../../../shared'
+import type { ThemeMode } from '../../../shared'
 
 const tabs = ['table', 'isotopes', 'lab'] as const
 const languageOptions = ['en', 'ko'] as const
@@ -11,7 +10,7 @@ const themeOptions = ['system', 'dark', 'light'] as const
 export function Navbar() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('table')
   const [openMenu, setOpenMenu] = useState<'language' | 'theme' | null>(null)
-  const { language, setLanguage, theme, setTheme } = useStore()
+  const { language, setLanguage, theme, setTheme } = useAppStore()
   const copy = translations[language]
   const menusRef = useRef<HTMLDivElement>(null)
 

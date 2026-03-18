@@ -1,16 +1,14 @@
 import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Scene3D } from './components/Scene3D'
-import { Navbar } from './components/Navbar'
-import { LeftPanel } from './components/LeftPanel'
-import { RightPanel } from './components/RightPanel'
-import { BottomControls } from './components/BottomControls'
-import { translations } from './lib/i18n'
-import { sceneThemePalettes, useResolvedTheme } from './lib/theme'
-import { useStore } from './store/useStore'
+import { BottomControls } from '../../../features/camera-control'
+import { LeftPanel } from '../../../features/element-explorer'
+import { RightPanel } from '../../../features/element-filter'
+import { Scene3D } from '../../../features/periodic-table-scene'
+import { Navbar } from '../../../features/preferences'
+import { sceneThemePalettes, translations, useAppStore, useResolvedTheme } from '../../../shared'
 
 function LoadingFallback() {
-  const language = useStore((state) => state.language)
+  const language = useAppStore((state) => state.language)
   const resolvedTheme = useResolvedTheme()
   const palette = sceneThemePalettes[resolvedTheme]
   const copy = translations[language]
@@ -38,8 +36,8 @@ function LoadingFallback() {
   )
 }
 
-export default function App() {
-  const language = useStore((state) => state.language)
+export function HomePage() {
+  const language = useAppStore((state) => state.language)
   const resolvedTheme = useResolvedTheme()
   const palette = sceneThemePalettes[resolvedTheme]
 

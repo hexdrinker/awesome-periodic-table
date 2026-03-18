@@ -3,10 +3,9 @@ import { useFrame } from '@react-three/fiber'
 import { Text, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import type { LineSegments, Mesh } from 'three'
-import type { Element } from '../data/elements'
-import { CATEGORY_COLORS } from '../data/elements'
-import { useStore } from '../store/useStore'
-import { getCategoryLabel, translations } from '../lib/i18n'
+import { useAppStore, getCategoryLabel, translations } from '../../../shared'
+import type { Element } from '../model/elements'
+import { CATEGORY_COLORS } from '../model/elements'
 
 interface ElementCubeProps {
   element: Element
@@ -26,7 +25,7 @@ export function ElementCube({ element }: ElementCubeProps) {
     selectedElement,
     filterCategory,
     language,
-  } = useStore()
+  } = useAppStore()
   const copy = translations[language]
 
   const catColor = CATEGORY_COLORS[element.category]

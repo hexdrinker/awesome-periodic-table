@@ -1,7 +1,6 @@
-import { useStore } from '../store/useStore'
-import { elements, CATEGORY_COLORS } from '../data/elements'
-import type { ElementCategory } from '../data/elements'
-import { getCategoryLabel, translations } from '../lib/i18n'
+import { CATEGORY_COLORS, elements } from '../../../entities/element'
+import type { ElementCategory } from '../../../entities/element'
+import { getCategoryLabel, translations, useAppStore } from '../../../shared'
 
 const FILTER_CATEGORIES: { category: ElementCategory; count: number }[] = [
   { category: 'noble-gas', count: elements.filter((e) => e.category === 'noble-gas').length },
@@ -13,7 +12,7 @@ const FILTER_CATEGORIES: { category: ElementCategory; count: number }[] = [
 ]
 
 export function RightPanel() {
-  const { filterCategory, setFilterCategory, language } = useStore()
+  const { filterCategory, setFilterCategory, language } = useAppStore()
   const copy = translations[language]
 
   return (

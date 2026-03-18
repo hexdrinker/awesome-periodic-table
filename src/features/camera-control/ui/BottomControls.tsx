@@ -1,7 +1,11 @@
-import { useStore } from '../store/useStore'
-import { translations } from '../lib/i18n'
+import { translations, useAppStore } from '../../../shared'
+import type { ControlMode } from '../../../shared'
 
-const controls = [
+const controls: Array<{
+  id: Exclude<ControlMode, 'none'>
+  labelKey: keyof (typeof translations)['en']['controls']
+  icon: JSX.Element
+}> = [
   {
     id: 'zoom-in',
     labelKey: 'zoomIn',
@@ -55,10 +59,10 @@ const controls = [
 ]
 
 export function BottomControls() {
-  const { controlMode, setControlMode, autoRotate, setAutoRotate, language } = useStore()
+  const { controlMode, setControlMode, autoRotate, setAutoRotate, language } = useAppStore()
   const copy = translations[language]
 
-  const handleClick = (id: string) => {
+  const handleClick = (id: Exclude<ControlMode, 'none'>) => {
     if (id === 'rotate') {
       setAutoRotate(!autoRotate)
       setControlMode(autoRotate ? 'none' : 'rotate')
@@ -67,7 +71,7 @@ export function BottomControls() {
       setAutoRotate(false)
       setTimeout(() => setControlMode('none'), 2000)
     } else {
-      setControlMode(controlMode === id ? 'none' : (id as any))
+      setControlMode(controlMode === id ? 'none' : id)
     }
   }
 

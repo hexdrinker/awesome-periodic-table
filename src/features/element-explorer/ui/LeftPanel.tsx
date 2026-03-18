@@ -1,11 +1,10 @@
-import { useStore } from '../store/useStore'
-import { CATEGORY_COLORS } from '../data/elements'
-import { translations } from '../lib/i18n'
+import { CATEGORY_COLORS } from '../../../entities/element'
+import { translations, useAppStore } from '../../../shared'
 
 const STABILITY_BARS = [3, 5, 4, 7, 5, 6, 4]
 
 export function LeftPanel() {
-  const { selectedElement, hoveredElement, language } = useStore()
+  const { selectedElement, hoveredElement, language } = useAppStore()
   const el = selectedElement ?? hoveredElement
   const copy = translations[language]
 

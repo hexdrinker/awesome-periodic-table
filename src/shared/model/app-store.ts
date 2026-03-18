@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { Element } from '../data/elements'
+import type { Element, ElementCategory } from '../../entities/element/model/elements'
 
-type ControlMode = 'rotate' | 'orbit' | 'zoom-in' | 'zoom-out' | 'reset' | 'none'
+export type ControlMode = 'rotate' | 'orbit' | 'zoom-in' | 'zoom-out' | 'reset' | 'none'
 export type AppLanguage = 'en' | 'ko'
 export type ThemeMode = 'system' | 'dark' | 'light'
 
@@ -11,19 +11,19 @@ interface StoreState {
   hoveredElement: Element | null
   controlMode: ControlMode
   autoRotate: boolean
-  filterCategory: string | null
+  filterCategory: ElementCategory | null
   language: AppLanguage
   theme: ThemeMode
   setSelectedElement: (el: Element | null) => void
   setHoveredElement: (el: Element | null) => void
   setControlMode: (mode: ControlMode) => void
   setAutoRotate: (v: boolean) => void
-  setFilterCategory: (cat: string | null) => void
+  setFilterCategory: (cat: ElementCategory | null) => void
   setLanguage: (language: AppLanguage) => void
   setTheme: (theme: ThemeMode) => void
 }
 
-export const useStore = create<StoreState>()(
+export const useAppStore = create<StoreState>()(
   persist(
     (set) => ({
       selectedElement: null,

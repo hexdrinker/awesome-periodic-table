@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useStore } from '../store/useStore'
-import type { ThemeMode } from '../store/useStore'
+import { useAppStore } from '../model/app-store'
+import type { ThemeMode } from '../model/app-store'
 
 export type ResolvedTheme = 'light' | 'dark'
 
@@ -68,7 +68,7 @@ export function resolveTheme(theme: ThemeMode, prefersDark: boolean): ResolvedTh
 }
 
 export function useResolvedTheme() {
-  const theme = useStore((state) => state.theme)
+  const theme = useAppStore((state) => state.theme)
   const [prefersDark, setPrefersDark] = useState(getSystemPrefersDark)
 
   useEffect(() => {
