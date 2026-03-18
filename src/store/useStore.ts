@@ -19,7 +19,7 @@ interface StoreState {
 export const useStore = create<StoreState>((set) => ({
   selectedElement: null,
   hoveredElement: null,
-  controlMode: 'orbit',
+  controlMode: 'none',
   autoRotate: false,
   filterCategory: null,
   setSelectedElement: (el) => set({ selectedElement: el }),

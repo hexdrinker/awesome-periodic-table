@@ -36,7 +36,7 @@ export default function App() {
       {/* 3D Canvas */}
       <Canvas
         style={{ position: 'absolute', inset: 0 }}
-        camera={{ fov: 55, near: 0.1, far: 500, position: [12, 16, 22] }}
+        camera={{ fov: 48, near: 0.1, far: 500, position: [10.5, 15.5, 19.5] }}
         gl={{ antialias: true, toneMapping: 4, toneMappingExposure: 1.1 }}
         shadows
       >
