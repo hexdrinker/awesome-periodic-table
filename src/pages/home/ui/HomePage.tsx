@@ -1,11 +1,11 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { BottomControls } from '../../../features/camera-control'
-import { LeftPanel } from '../../../features/element-explorer'
-import { RightPanel } from '../../../features/element-filter'
-import { Scene3D } from '../../../features/periodic-table-scene'
-import { Navbar } from '../../../features/preferences'
-import { sceneThemePalettes, translations, useAppStore, useResolvedTheme } from '../../../shared'
+import { BottomControls } from '@/features/camera-control'
+import { LeftPanel } from '@/features/element-explorer'
+import { RightPanel } from '@/features/element-filter'
+import { Scene3D } from '@/features/periodic-table-scene'
+import { Navbar } from '@/features/preferences'
+import { sceneThemePalettes, translations, useAppStore, useResolvedTheme } from '@/shared'
 
 function LoadingFallback() {
   const language = useAppStore((state) => state.language)
@@ -37,15 +37,8 @@ function LoadingFallback() {
 }
 
 export function HomePage() {
-  const language = useAppStore((state) => state.language)
   const resolvedTheme = useResolvedTheme()
   const palette = sceneThemePalettes[resolvedTheme]
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = resolvedTheme
-    document.documentElement.lang = language
-    document.documentElement.style.colorScheme = resolvedTheme
-  }, [language, resolvedTheme])
 
   return (
     <div className="ui-shell" style={{ width: '100vw', height: '100vh', background: palette.background, position: 'relative' }}>

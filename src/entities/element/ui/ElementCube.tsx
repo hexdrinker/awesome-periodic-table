@@ -3,10 +3,10 @@ import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 import type { LineSegments, Mesh } from 'three'
-import { useAppStore } from '../../../shared'
-import type { Element } from '../model/elements'
-import { CATEGORY_COLORS } from '../model/elements'
-import { getElementStateAtTemperature } from '../model/physical-state'
+import { useAppStore } from '@/shared'
+import { navigateToElementDetail } from '@/shared/lib/router'
+import { CATEGORY_COLORS, type Element } from '@/entities/element/model/elements'
+import { getElementStateAtTemperature } from '@/entities/element/model/physical-state'
 
 interface ElementCubeProps {
   element: Element
@@ -137,7 +137,8 @@ export function ElementCube({ element }: ElementCubeProps) {
         }}
         onClick={(e) => {
           e.stopPropagation()
-          setSelectedElement(isSelected ? null : element)
+          setSelectedElement(element)
+          navigateToElementDetail(element.atomicNumber)
         }}
       >
         <boxGeometry args={[CUBE_SIZE, CUBE_HEIGHT, CUBE_SIZE]} />
