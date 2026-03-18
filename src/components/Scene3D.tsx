@@ -7,6 +7,8 @@ import * as THREE from 'three'
 import { elements } from '../data/elements'
 import { ElementCube } from './ElementCube'
 import { useStore } from '../store/useStore'
+import type { ResolvedTheme } from '../lib/theme'
+import { sceneThemePalettes } from '../lib/theme'
 
 const TABLE_CAMERA_POS = new THREE.Vector3(10.5, 15.5, 19.5)
 const TABLE_CAMERA_TARGET = new THREE.Vector3(10.5, 0.2, 4.8)
@@ -63,62 +65,63 @@ function CameraController() {
   )
 }
 
-function FloorGrid() {
+function FloorGrid({ theme }: { theme: ResolvedTheme }) {
+  const palette = sceneThemePalettes[theme]
+
   return (
     <gridHelper
-      args={[44, 44, '#1a2030', '#111620']}
+      args={[44, 44, palette.gridMajor, palette.gridMinor]}
       position={[10.5, -0.4, 4.8]}
     />
   )
 }
 
-export function Scene3D() {
+export function Scene3D({ theme }: { theme: ResolvedTheme }) {
+  const palette = sceneThemePalettes[theme]
+
   return (
     <>
-      {/* Lighting */}
-      <ambientLight intensity={0.18} />
+      <ambientLight intensity={palette.ambient} />
       <directionalLight
         position={[18, 24, 18]}
-        intensity={0.85}
+        intensity={palette.primaryDirectional}
         color="#a1faff"
         castShadow
       />
-      <directionalLight position={[-8, 12, -6]} intensity={0.32} color="#ff59e3" />
+      <directionalLight position={[-8, 12, -6]} intensity={palette.secondaryDirectional} color="#ff59e3" />
       <pointLight
         position={[10.5, 5.5, 8]}
-        intensity={1.15}
+        intensity={palette.primaryPoint}
         color="#a1faff"
         distance={24}
         decay={2}
       />
-      <pointLight position={[17, 4, 6]} intensity={0.55} color="#ff59e3" distance={16} decay={2} />
-      <pointLight position={[3, 4, 6]} intensity={0.5} color="#c3ff96" distance={16} decay={2} />
+      <pointLight position={[17, 4, 6]} intensity={palette.secondaryPoint} color="#ff59e3" distance={16} decay={2} />
+      <pointLight position={[3, 4, 6]} intensity={palette.tertiaryPoint} color="#c3ff96" distance={16} decay={2} />
 
-      {/* Background stars */}
-      <Stars
-        radius={120}
-        depth={60}
-        count={2200}
-        factor={2.2}
-        saturation={0}
-        fade
-        speed={0.2}
-      />
+      {palette.showStars && (
+        <Stars
+          radius={120}
+          depth={60}
+          count={2200}
+          factor={2.2}
+          saturation={0}
+          fade
+          speed={0.2}
+        />
+      )}
 
-      <FloorGrid />
+      <FloorGrid theme={theme} />
 
-      {/* Element cubes */}
       {elements.map((el) => (
         <ElementCube key={el.atomicNumber} element={el} />
       ))}
 
-      {/* Camera controls */}
       <CameraController />
 
-      {/* Post-processing glow */}
       <EffectComposer>
         <Bloom
-          intensity={1.2}
+          intensity={palette.bloom}
           luminanceThreshold={0.2}
           luminanceSmoothing={0.9}
           mipmapBlur

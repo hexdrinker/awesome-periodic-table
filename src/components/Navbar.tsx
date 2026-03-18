@@ -1,81 +1,213 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
+import { translations } from '../lib/i18n'
+import { useStore } from '../store/useStore'
+import type { ThemeMode } from '../store/useStore'
 
-const tabs = ['TABLE', 'ISOTOPES', 'LAB']
+const tabs = ['table', 'isotopes', 'lab'] as const
+const languageOptions = ['en', 'ko'] as const
+const themeOptions = ['system', 'dark', 'light'] as const
 
 export function Navbar() {
-  const [activeTab, setActiveTab] = useState('TABLE')
-  const [searchVal, setSearchVal] = useState('')
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('table')
+  const [openMenu, setOpenMenu] = useState<'language' | 'theme' | null>(null)
+  const { language, setLanguage, theme, setTheme } = useStore()
+  const copy = translations[language]
+  const menusRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!menusRef.current?.contains(event.target as Node)) {
+        setOpenMenu(null)
+      }
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenMenu(null)
+      }
+    }
+
+    window.addEventListener('mousedown', handlePointerDown)
+    window.addEventListener('keydown', handleEscape)
+
+    return () => {
+      window.removeEventListener('mousedown', handlePointerDown)
+      window.removeEventListener('keydown', handleEscape)
+    }
+  }, [])
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center px-6 h-14"
-      style={{ background: 'rgba(11, 14, 20, 0.85)', backdropFilter: 'blur(12px)' }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center px-7 h-16"
+      style={{
+        background: 'var(--app-bg-nav)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid var(--outline-soft)',
+      }}
     >
-      {/* Brand */}
       <span
-        className="font-space font-semibold tracking-[0.22em] text-sm text-white mr-10 select-none"
+        className="font-space font-semibold tracking-[0.22em] text-base mr-10 select-none"
         style={{ letterSpacing: '0.22em' }}
       >
-        QUANTUM OBSERVATORY
+        {copy.brand}
       </span>
 
-      {/* Nav tabs */}
       <div className="flex items-center gap-8 mr-auto">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`font-inter text-xs tracking-widest transition-colors duration-200 pb-1 ${
-              activeTab === tab
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-gray-500 hover:text-gray-300'
-            }`}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', letterSpacing: '0.14em' }}
+            className={`header-tab ${activeTab === tab ? 'active' : ''}`}
+            style={{ letterSpacing: '0.14em' }}
           >
-            {tab}
+            {copy.tabs[tab]}
           </button>
         ))}
       </div>
 
-      {/* Search */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded" style={{ background: '#10131a' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4a5568" strokeWidth="2">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-          <input
-            type="text"
-            value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
-            placeholder="SEARCH ELEMENTS..."
-            className="bg-transparent text-gray-400 text-xs outline-none w-32 font-inter tracking-wider placeholder-gray-700"
-            style={{ letterSpacing: '0.06em', fontSize: '10px' }}
-          />
-        </div>
-
-        {/* Settings icon */}
-        <button
-          className="text-gray-500 hover:text-gray-300 transition-colors"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+      <div ref={menusRef} className="flex items-center gap-3">
+        <Dropdown
+          isOpen={openMenu === 'language'}
+          onToggle={() => setOpenMenu(openMenu === 'language' ? null : 'language')}
+          triggerValue={language === 'en' ? copy.topBar.english : copy.topBar.korean}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
-        </button>
+          {languageOptions.map((option) => (
+            <DropdownItem
+              key={option}
+              active={language === option}
+              label={option === 'en' ? copy.topBar.english : copy.topBar.korean}
+              onClick={() => {
+                setLanguage(option)
+                setOpenMenu(null)
+              }}
+            />
+          ))}
+        </Dropdown>
 
-        {/* User icon */}
-        <button
-          className="text-gray-500 hover:text-gray-300 transition-colors"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        <Dropdown
+          isOpen={openMenu === 'theme'}
+          onToggle={() => setOpenMenu(openMenu === 'theme' ? null : 'theme')}
+          triggerIcon={<ThemeIcon theme={theme} />}
+          triggerValue={copy.topBar[theme]}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-        </button>
+          {themeOptions.map((option) => (
+            <DropdownItem
+              key={option}
+              active={theme === option}
+              icon={<ThemeIcon theme={option} />}
+              label={copy.topBar[option]}
+              onClick={() => {
+                setTheme(option)
+                setOpenMenu(null)
+              }}
+            />
+          ))}
+        </Dropdown>
       </div>
     </nav>
+  )
+}
+
+function Dropdown({
+  isOpen,
+  onToggle,
+  triggerIcon,
+  triggerValue,
+  children,
+}: {
+  isOpen: boolean
+  onToggle: () => void
+  triggerIcon?: ReactNode
+  triggerValue: string
+  children: ReactNode
+}) {
+  return (
+    <div className="header-dropdown">
+      <button
+        type="button"
+        className={`header-dropdown-trigger ${isOpen ? 'active' : ''}`}
+        onClick={onToggle}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+      >
+        {triggerIcon && <span className="header-dropdown-trigger-icon">{triggerIcon}</span>}
+        <span className="header-dropdown-trigger-value">{triggerValue}</span>
+        <ChevronIcon open={isOpen} />
+      </button>
+      {isOpen && (
+        <div className="header-dropdown-menu" role="menu">
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DropdownItem({
+  active,
+  icon,
+  label,
+  onClick,
+}: {
+  active: boolean
+  icon?: ReactNode
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      className={`header-dropdown-item ${active ? 'active' : ''}`}
+      onClick={onClick}
+      role="menuitemradio"
+      aria-checked={active}
+    >
+      {icon && <span className="header-dropdown-item-icon">{icon}</span>}
+      <span>{label}</span>
+    </button>
+  )
+}
+
+function ThemeIcon({ theme }: { theme: ThemeMode }) {
+  if (theme === 'light') {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2 12h2.2M19.8 12H22M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5" />
+      </svg>
+    )
+  }
+
+  if (theme === 'dark') {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <path d="M20 15.2A8.5 8.5 0 1 1 11 4a6.9 6.9 0 0 0 9 11.2Z" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <rect x="3.5" y="4.5" width="17" height="11" rx="2" />
+      <path d="M8 19.5h8M10 15.5v4M14 15.5v4" />
+    </svg>
+  )
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      aria-hidden="true"
+      style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
   )
 }

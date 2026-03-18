@@ -1,9 +1,10 @@
 import { useStore } from '../store/useStore'
+import { translations } from '../lib/i18n'
 
 const controls = [
   {
     id: 'zoom-in',
-    label: 'ZOOM IN',
+    labelKey: 'zoomIn',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="11" cy="11" r="8" />
@@ -13,7 +14,7 @@ const controls = [
   },
   {
     id: 'zoom-out',
-    label: 'ZOOM OUT',
+    labelKey: 'zoomOut',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="11" cy="11" r="8" />
@@ -23,7 +24,7 @@ const controls = [
   },
   {
     id: 'rotate',
-    label: 'ROTATE',
+    labelKey: 'rotate',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -33,7 +34,7 @@ const controls = [
   },
   {
     id: 'orbit',
-    label: 'ORBIT',
+    labelKey: 'orbit',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="12" r="10" />
@@ -44,7 +45,7 @@ const controls = [
   },
   {
     id: 'reset',
-    label: 'RESET',
+    labelKey: 'reset',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M3 3v5h5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M21 21v-5h-5" />
@@ -54,7 +55,8 @@ const controls = [
 ]
 
 export function BottomControls() {
-  const { controlMode, setControlMode, autoRotate, setAutoRotate } = useStore()
+  const { controlMode, setControlMode, autoRotate, setAutoRotate, language } = useStore()
+  const copy = translations[language]
 
   const handleClick = (id: string) => {
     if (id === 'rotate') {
@@ -71,11 +73,11 @@ export function BottomControls() {
 
   return (
     <div
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-6 py-3 rounded-full select-none"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-7 py-4 rounded-full select-none"
       style={{
-        background: 'rgba(16, 19, 26, 0.85)',
+        background: 'var(--app-bg-nav)',
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(161, 250, 255, 0.06)',
+        border: '1px solid var(--outline-soft)',
       }}
     >
       {controls.map((ctrl) => {
@@ -88,7 +90,9 @@ export function BottomControls() {
             className={`ctrl-btn ${isActive ? 'active' : ''}`}
           >
             {ctrl.icon}
-            <span style={{ fontSize: '8px', letterSpacing: '0.1em' }}>{ctrl.label}</span>
+            <span style={{ fontSize: '10px', letterSpacing: '0.08em' }}>
+              {copy.controls[ctrl.labelKey]}
+            </span>
           </button>
         )
       })}

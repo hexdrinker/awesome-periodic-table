@@ -1,6 +1,7 @@
 import { useStore } from '../store/useStore'
-import { elements, CATEGORY_COLORS, CATEGORY_LABELS } from '../data/elements'
+import { elements, CATEGORY_COLORS } from '../data/elements'
 import type { ElementCategory } from '../data/elements'
+import { getCategoryLabel, translations } from '../lib/i18n'
 
 const FILTER_CATEGORIES: { category: ElementCategory; count: number }[] = [
   { category: 'noble-gas', count: elements.filter((e) => e.category === 'noble-gas').length },
@@ -12,32 +13,24 @@ const FILTER_CATEGORIES: { category: ElementCategory; count: number }[] = [
 ]
 
 export function RightPanel() {
-  const { filterCategory, setFilterCategory } = useStore()
+  const { filterCategory, setFilterCategory, language } = useStore()
+  const copy = translations[language]
 
   return (
     <div
-      className="fixed right-0 top-14 bottom-0 z-40 flex flex-col gap-4 p-5 select-none"
-      style={{ width: '240px', background: 'rgba(11, 14, 20, 0.6)' }}
+      className="fixed right-0 top-16 bottom-0 z-40 flex flex-col gap-5 p-6 select-none"
+      style={{
+        width: '280px',
+        background: 'var(--app-bg-panel)',
+        backdropFilter: 'blur(18px)',
+      }}
     >
-      {/* System Status */}
-      <div className="p-4 rounded" style={{ background: '#10131a' }}>
-        <h3
-          className="font-inter text-gray-300 tracking-widest mb-3"
-          style={{ fontSize: '10px', letterSpacing: '0.2em' }}
-        >
-          SYSTEM STATUS
-        </h3>
-        <StatusRow label="QUANTUM CORE" status="ACTIVE" color="#c3ff96" />
-        <StatusRow label="OBSERVATION LINK" status="LOCKED" color="#ff59e3" />
-      </div>
-
-      {/* Category Filters */}
-      <div className="p-4 rounded flex-1" style={{ background: '#10131a' }}>
+      <div className="p-5 rounded" style={{ background: 'var(--app-bg-elev)' }}>
         <h3
           className="font-inter tracking-widest mb-4"
-          style={{ fontSize: '10px', letterSpacing: '0.2em', color: '#ff59e3' }}
+          style={{ fontSize: '12px', letterSpacing: '0.18em', color: '#ff59e3' }}
         >
-          CATEGORY FILTERS
+          {copy.rightPanel.categoryFilters}
         </h3>
         <div className="space-y-4">
           {FILTER_CATEGORIES.map(({ category, count }) => {
@@ -57,19 +50,19 @@ export function RightPanel() {
               >
                 <div className="flex justify-between items-center mb-1.5">
                   <span
-                    className="font-inter text-gray-400 tracking-wider"
-                    style={{ fontSize: '10px', letterSpacing: '0.1em' }}
+                    className="font-inter tracking-wider"
+                    style={{ fontSize: '12px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}
                   >
-                    {CATEGORY_LABELS[category].toUpperCase()}
+                    {getCategoryLabel(category, language)}
                   </span>
                   <span
                     className="font-inter font-semibold tracking-wider"
-                    style={{ fontSize: '10px', color, letterSpacing: '0.1em' }}
+                    style={{ fontSize: '12px', color, letterSpacing: '0.08em' }}
                   >
-                    {count} ELEMENTS
+                    {count} {copy.rightPanel.elements}
                   </span>
                 </div>
-                <div className="category-bar w-full" style={{ background: '#1c2028' }}>
+                <div className="category-bar w-full" style={{ background: 'var(--track-color)' }}>
                   <div
                     className="category-bar transition-all duration-300"
                     style={{
@@ -85,48 +78,33 @@ export function RightPanel() {
         </div>
       </div>
 
-      {/* Element count summary */}
-      <div className="p-3 rounded" style={{ background: '#10131a' }}>
+      <div className="p-4 rounded" style={{ background: 'var(--app-bg-elev)' }}>
         <div className="flex justify-between items-center">
           <span
-            className="font-inter text-gray-500 tracking-wider"
-            style={{ fontSize: '9px', letterSpacing: '0.15em' }}
+            className="font-inter tracking-wider"
+            style={{ fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}
           >
-            TOTAL ELEMENTS
+            {copy.rightPanel.totalElements}
           </span>
-          <span className="font-space text-primary font-semibold text-sm">118</span>
+          <span className="font-space text-primary font-semibold text-base">118</span>
         </div>
         {filterCategory && (
           <button
             onClick={() => setFilterCategory(null)}
-            className="mt-2 w-full font-inter tracking-wider text-center py-1 rounded transition-colors"
+            className="mt-3 w-full font-inter tracking-wider text-center py-2 rounded transition-colors"
             style={{
-              fontSize: '9px',
-              letterSpacing: '0.1em',
-              color: '#a1faff',
-              background: 'rgba(161, 250, 255, 0.08)',
+              fontSize: '11px',
+              letterSpacing: '0.08em',
+              color: 'var(--accent)',
+              background: 'var(--app-bg-soft)',
               border: 'none',
               cursor: 'pointer',
             }}
           >
-            CLEAR FILTER
+            {copy.rightPanel.clearFilter}
           </button>
         )}
       </div>
-    </div>
-  )
-}
-
-function StatusRow({ label, status, color }: { label: string; status: string; color: string }) {
-  return (
-    <div className="flex items-center gap-2 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full" style={{ background: color, flexShrink: 0 }} />
-      <span className="font-inter text-gray-500 tracking-wider flex-1" style={{ fontSize: '9px', letterSpacing: '0.1em' }}>
-        {label}
-      </span>
-      <span className="font-inter font-semibold tracking-wider" style={{ fontSize: '9px', color, letterSpacing: '0.1em' }}>
-        {status}
-      </span>
     </div>
   )
 }

@@ -1,69 +1,79 @@
 import { useStore } from '../store/useStore'
 import { CATEGORY_COLORS } from '../data/elements'
+import { translations } from '../lib/i18n'
 
 const STABILITY_BARS = [3, 5, 4, 7, 5, 6, 4]
 
 export function LeftPanel() {
-  const { selectedElement, hoveredElement } = useStore()
+  const { selectedElement, hoveredElement, language } = useStore()
   const el = selectedElement ?? hoveredElement
+  const copy = translations[language]
 
   return (
-    <div className="fixed bottom-24 left-6 z-40 select-none" style={{ maxWidth: '220px' }}>
-      {/* Title block */}
+    <div className="fixed bottom-24 left-6 z-40 select-none" style={{ maxWidth: '260px' }}>
       <div className="mb-6">
-        <h1 className="font-space font-semibold text-white leading-tight" style={{ fontSize: '28px' }}>
-          Quantum 3D
+        <h1 className="font-space font-semibold leading-tight" style={{ fontSize: '34px', color: 'var(--text-primary)' }}>
+          {copy.leftPanel.title}
         </h1>
         <h2
-          className="font-space font-bold tracking-widest text-white"
-          style={{ fontSize: '13px', letterSpacing: '0.28em' }}
+          className="font-space font-bold tracking-widest"
+          style={{ fontSize: '16px', letterSpacing: '0.24em', color: 'var(--text-primary)' }}
         >
-          PERIODIC TABLE
+          {copy.leftPanel.subtitle}
         </h2>
         <p
-          className="font-inter text-gray-500 mt-2 leading-relaxed"
-          style={{ fontSize: '9px', letterSpacing: '0.06em', lineHeight: '1.6' }}
+          className="font-inter mt-2 leading-relaxed"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.06em',
+            lineHeight: '1.6',
+            color: 'var(--text-muted)',
+          }}
         >
-          SIMULATED ATOMIC LANDSCAPE RENDERED<br />
-          AT 10⁻¹⁰ SCALE. NAVIGATE THE CUBES TO<br />
-          INSPECT ISOTOPE STABILITY AND<br />
-          ELECTRON SHELL CONFIGURATION.
+          {copy.leftPanel.description.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </p>
       </div>
 
-      {/* Selected element info */}
       {el && (
-        <div className="mb-5 p-3 rounded" style={{ background: 'rgba(22, 26, 34, 0.7)' }}>
+        <div
+          className="mb-5 p-4 rounded"
+          style={{ background: 'var(--app-bg-card)', boxShadow: '0 10px 32px var(--shadow-glow)' }}
+        >
           <div
             className="font-space font-bold text-2xl"
             style={{ color: CATEGORY_COLORS[el.category] }}
           >
             {el.symbol}
           </div>
-          <div className="font-space text-white text-sm font-medium">{el.name}</div>
+          <div className="font-space text-base font-medium" style={{ color: 'var(--text-primary)' }}>
+            {el.name}
+          </div>
           <div className="mt-2 space-y-1">
-            <DataRow label="Atomic #" value={String(el.atomicNumber)} />
-            <DataRow label="Weight" value={`${el.atomicWeight} u`} />
-            {el.meltingPoint && <DataRow label="Melting" value={`${el.meltingPoint} K`} />}
-            {el.boilingPoint && <DataRow label="Boiling" value={`${el.boilingPoint} K`} />}
-            {el.density && <DataRow label="Density" value={`${el.density} g/cm³`} />}
+            <DataRow label={copy.leftPanel.atomicNumber} value={String(el.atomicNumber)} />
+            <DataRow label={copy.leftPanel.weight} value={`${el.atomicWeight} u`} />
+            {el.meltingPoint && <DataRow label={copy.leftPanel.melting} value={`${el.meltingPoint} K`} />}
+            {el.boilingPoint && <DataRow label={copy.leftPanel.boiling} value={`${el.boilingPoint} K`} />}
+            {el.density && <DataRow label={copy.leftPanel.density} value={`${el.density} g/cm³`} />}
           </div>
           <div
-            className="font-inter text-gray-500 mt-2 tracking-wider"
-            style={{ fontSize: '9px', letterSpacing: '0.1em' }}
+            className="font-inter mt-2 tracking-wider"
+            style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--text-muted)' }}
           >
             {el.electronConfig}
           </div>
         </div>
       )}
 
-      {/* Stability Index */}
       <div className="mb-4">
         <span
-          className="font-inter text-gray-500 tracking-widest block mb-2"
-          style={{ fontSize: '9px', letterSpacing: '0.18em' }}
+          className="font-inter tracking-widest block mb-2"
+          style={{ fontSize: '11px', letterSpacing: '0.16em', color: 'var(--text-muted)' }}
         >
-          STABILITY INDEX
+          {copy.leftPanel.stabilityIndex}
         </span>
         <div className="flex items-end gap-1" style={{ height: '28px' }}>
           {STABILITY_BARS.map((h, i) => (
@@ -84,11 +94,13 @@ export function LeftPanel() {
       <div>
         <span
           className="font-inter tracking-widest block mb-1"
-          style={{ fontSize: '9px', letterSpacing: '0.18em', color: '#ff59e3' }}
+          style={{ fontSize: '11px', letterSpacing: '0.16em', color: '#ff59e3' }}
         >
-          FLUX VARIANCE
+          {copy.leftPanel.fluxVariance}
         </span>
-        <span className="font-inter text-white text-sm">1.024e-12 μs</span>
+        <span className="font-inter text-base" style={{ color: 'var(--text-primary)' }}>
+          1.024e-12 μs
+        </span>
       </div>
     </div>
   )
@@ -97,10 +109,10 @@ export function LeftPanel() {
 function DataRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between">
-      <span className="font-inter text-gray-600" style={{ fontSize: '9px', letterSpacing: '0.08em' }}>
-        {label.toUpperCase()}
+      <span className="font-inter" style={{ fontSize: '11px', letterSpacing: '0.06em', color: 'var(--text-subtle)' }}>
+        {label}
       </span>
-      <span className="font-inter text-gray-300" style={{ fontSize: '9px' }}>
+      <span className="font-inter" style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
         {value}
       </span>
     </div>

@@ -6,6 +6,7 @@ import type { LineSegments, Mesh } from 'three'
 import type { Element } from '../data/elements'
 import { CATEGORY_COLORS } from '../data/elements'
 import { useStore } from '../store/useStore'
+import { getCategoryLabel, translations } from '../lib/i18n'
 
 interface ElementCubeProps {
   element: Element
@@ -24,7 +25,9 @@ export function ElementCube({ element }: ElementCubeProps) {
     setSelectedElement,
     selectedElement,
     filterCategory,
+    language,
   } = useStore()
+  const copy = translations[language]
 
   const catColor = CATEGORY_COLORS[element.category]
   const isSelected = selectedElement?.atomicNumber === element.atomicNumber
@@ -276,28 +279,28 @@ export function ElementCube({ element }: ElementCubeProps) {
             >
               {element.symbol} — {element.atomicNumber}
             </div>
-            <div className='text-white text-sm font-space font-medium'>
+            <div className='text-sm font-space font-medium' style={{ color: 'var(--text-primary)' }}>
               {element.name}
             </div>
             <div
-              className='text-gray-400 text-xs mt-1 font-inter'
-              style={{ fontSize: '10px' }}
+              className='text-xs mt-1 font-inter'
+              style={{ fontSize: '10px', color: 'var(--text-muted)' }}
             >
               {element.atomicWeight} u
             </div>
             {element.meltingPoint && (
               <div
-                className='text-gray-500 text-xs font-inter'
-                style={{ fontSize: '10px' }}
+                className='text-xs font-inter'
+                style={{ fontSize: '10px', color: 'var(--text-subtle)' }}
               >
-                MP: {element.meltingPoint} K
+                {copy.tooltip.meltingPoint}: {element.meltingPoint} K
               </div>
             )}
             <div
-              className='text-gray-600 text-xs font-inter capitalize mt-1'
-              style={{ fontSize: '9px', letterSpacing: '0.05em' }}
+              className='text-xs font-inter mt-1'
+              style={{ fontSize: '9px', letterSpacing: '0.05em', color: 'var(--text-subtle)' }}
             >
-              {element.category.replace(/-/g, ' ')}
+              {getCategoryLabel(element.category, language)}
             </div>
           </div>
         </Html>
