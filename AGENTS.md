@@ -5,9 +5,9 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 ## Commands
 
 ```bash
-npm run dev      # Start dev server (Vite)
-npm run build    # Type-check + production build
-npm run preview  # Preview production build
+pnpm dev         # Start dev server (Vite)
+pnpm build       # Type-check + production build
+pnpm preview     # Preview production build
 ```
 
 ## Architecture
