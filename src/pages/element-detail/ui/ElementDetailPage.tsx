@@ -131,11 +131,6 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
         symbol: element.symbol,
       })
     : null
-  const handleBackToTable = () => {
-    setSelectedElement(null)
-    setHoveredElement(null)
-    navigateToHome()
-  }
 
   return (
     <div
@@ -155,22 +150,6 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
 
       <div className="h-full overflow-y-auto pt-16">
         <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col px-5 py-5 md:px-8 md:py-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <button
-              type="button"
-              className="detail-nav-button"
-              onClick={handleBackToTable}
-            >
-              {content.backToTable}
-            </button>
-            <div
-              className="font-inter tracking-[0.28em] uppercase"
-              style={{ fontSize: '11px', color: 'var(--text-muted)' }}
-            >
-              {copy.brand}
-            </div>
-          </div>
-
           {isElementsLoading ? (
             <StatePanel
               language={language}

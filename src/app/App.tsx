@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+import { CompoundDetailPage } from '@/pages/compound-detail'
+import { CompoundsPage } from '@/pages/compounds'
 import { ElementDetailPage } from '@/pages/element-detail'
 import { HomePage } from '@/pages/home'
 import { useAppStore, useResolvedTheme } from '@/shared'
@@ -17,6 +19,14 @@ export default function App() {
 
   if (route.name === 'element-detail') {
     return <ElementDetailPage atomicNumber={route.atomicNumber} />
+  }
+
+  if (route.name === 'compounds') {
+    return <CompoundsPage />
+  }
+
+  if (route.name === 'compound-detail') {
+    return <CompoundDetailPage cid={route.cid} />
   }
 
   return <HomePage />

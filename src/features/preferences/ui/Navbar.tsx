@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { translations, useAppStore } from '@/shared'
 import type { ThemeMode } from '@/shared'
+import { navigateToCompounds, navigateToHome, useAppRoute } from '@/shared/lib/router'
 
-const tabs = ['table', 'isotopes', 'lab'] as const
+const tabs = ['table', 'compounds'] as const
 const languageOptions = ['en', 'ko'] as const
 const themeOptions = ['system', 'dark', 'light'] as const
 
 export function Navbar() {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('table')
   const [openMenu, setOpenMenu] = useState<'language' | 'theme' | null>(null)
   const { language, setLanguage, theme, setTheme } = useAppStore()
+  const route = useAppRoute()
   const copy = translations[language]
   const menusRef = useRef<HTMLDivElement>(null)
 
@@ -36,6 +37,16 @@ export function Navbar() {
     }
   }, [])
 
+  const activeTab = route.name === 'compounds' ? 'compounds' : 'table'
+  const handleTabClick = (tab: (typeof tabs)[number]) => {
+    if (tab === 'compounds') {
+      navigateToCompounds()
+      return
+    }
+
+    navigateToHome()
+  }
+
   return (
     <nav
       className="fixed top-0 left-0 right-0 z-50 flex items-center px-7 h-16"
@@ -56,7 +67,7 @@ export function Navbar() {
         {tabs.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => handleTabClick(tab)}
             className={`header-tab ${activeTab === tab ? 'active' : ''}`}
             style={{ letterSpacing: '0.14em' }}
           >
