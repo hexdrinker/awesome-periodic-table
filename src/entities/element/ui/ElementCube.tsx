@@ -46,11 +46,21 @@ export function ElementCube({ element }: ElementCubeProps) {
   const y = 0
   const z = element.yPos * SPACING
 
-  const targetScale = hovered || isSelected ? 1.05 : 1.0
-  const targetEmissive = hovered || isSelected ? 1.1 : isFiltered ? 0.04 : 0.58
-  const targetOpacity = hovered || isSelected ? 0.9 : isFiltered ? 0.26 : 0.76
+  const targetScale = isSelected ? 1.05 : 1.0
+  const baseEmissive = isFiltered ? 0.04 : 0.58
+  const targetEmissive = isSelected ? 0.78 : baseEmissive
+  const baseOpacity = isFiltered ? 0.26 : 0.76
+  const targetOpacity = isSelected ? 0.84 : baseOpacity
   const targetOutlineOpacity =
-    hovered || isSelected ? 0.9 : isFiltered ? 0.12 : 0.48
+    hovered || isSelected ? 0.95 : isFiltered ? 0.12 : 0.48
+  const outlineColor = useMemo(() => {
+    if (isFiltered) return new THREE.Color('#4b5563')
+    const baseOutlineColor = new THREE.Color(catColor)
+    if (hovered || isSelected) {
+      return baseOutlineColor.clone().lerp(new THREE.Color('#ffffff'), 0.28)
+    }
+    return baseOutlineColor
+  }, [catColor, hovered, isFiltered, isSelected])
 
   const color = useMemo(() => new THREE.Color(catColor), [catColor])
   const baseColor = useMemo(() => new THREE.Color('#1a1f2a'), [])
@@ -222,7 +232,7 @@ export function ElementCube({ element }: ElementCubeProps) {
           ]}
         />
         <lineBasicMaterial
-          color={catColor}
+          color={outlineColor}
           transparent
           opacity={targetOutlineOpacity}
         />
