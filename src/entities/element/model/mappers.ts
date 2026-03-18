@@ -61,6 +61,7 @@ export function mapPeriodicTableResponse(response: PubChemPeriodicTableResponse)
 
 export function mapElementDetailResponse(response: PubChemElementDetailResponse): ElementDetail {
   const sections = response.Record.Section ?? []
+  const pubChemElementUrl = `https://pubchem.ncbi.nlm.nih.gov/element/${response.Record.RecordNumber}`
 
   return {
     atomicNumber: response.Record.RecordNumber,
@@ -79,6 +80,8 @@ export function mapElementDetailResponse(response: PubChemElementDetailResponse)
     electronAffinity: toNumber(getSectionValue(sections, 'Electron Affinity')),
     electronegativity: toNumber(getSectionValue(sections, 'Electronegativity')),
     physicalDescription: toNullableText(getSectionValue(sections, 'Physical Description')),
+    physicalDescriptionSource: 'pubchem',
+    physicalDescriptionUrl: pubChemElementUrl,
   }
 }
 

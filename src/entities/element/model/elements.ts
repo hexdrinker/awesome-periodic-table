@@ -66,6 +66,8 @@ export interface ElementDetail {
   electronAffinity: number | null
   electronegativity: number | null
   physicalDescription: string | null
+  physicalDescriptionSource: 'wikipedia' | 'pubchem' | null
+  physicalDescriptionUrl: string | null
 }
 
 export const CATEGORY_COLORS: Record<ElementCategory, string> = {

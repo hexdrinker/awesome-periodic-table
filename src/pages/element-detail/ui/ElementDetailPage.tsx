@@ -38,6 +38,7 @@ const DETAIL_COPY = {
     configurationTooltip: 'Electron arrangement across orbitals, which strongly influences bonding and reactivity.',
     densityTooltip: 'Mass packed into a given volume, usually measured near room conditions.',
     descriptionLabel: 'Field Notes',
+    descriptionSourceLabel: 'Source',
     electronAffinityLabel: 'Electron Affinity',
     electronAffinityTooltip: 'Energy change when a neutral atom gains an electron.',
     electronegativityLabel: 'Electronegativity',
@@ -69,6 +70,7 @@ const DETAIL_COPY = {
     configurationTooltip: '전자들이 어떤 오비탈에 배치되는지 보여주며 결합과 반응성을 크게 좌우합니다.',
     densityTooltip: '일정 부피 안에 얼마나 많은 질량이 들어 있는지 나타내는 값입니다.',
     descriptionLabel: '설명',
+    descriptionSourceLabel: '출처',
     electronAffinityLabel: '전자 친화도',
     electronAffinityTooltip: '중성 원자가 전자 하나를 받아들일 때의 에너지 변화입니다.',
     electronegativityLabel: '전기음성도',
@@ -111,7 +113,7 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
   )
 
   const { data: detail, isLoading: isDetailLoading, isError: isDetailError } =
-    useElementDetailQuery(element?.atomicNumber ?? atomicNumber)
+    useElementDetailQuery(element?.atomicNumber ?? atomicNumber, language)
 
   const accentColor = element ? CATEGORY_COLORS[element.category] : 'var(--accent)'
   const facts = buildFacts(element, detail, language, copy, content)
@@ -281,6 +283,21 @@ export function ElementDetailPage({ atomicNumber }: ElementDetailPageProps) {
                               ? '추가 설명이 제공되지 않았습니다.'
                               : 'No additional description is available.')}
                     </div>
+                    {!isDetailLoading && !isDetailError && detail?.physicalDescriptionUrl && (
+                      <div className="detail-note-source">
+                        <span>{content.descriptionSourceLabel}</span>
+                        <a
+                          href={detail.physicalDescriptionUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="detail-source-link"
+                        >
+                          {detail.physicalDescriptionSource === 'wikipedia'
+                            ? 'Wikipedia'
+                            : 'PubChem'}
+                        </a>
+                      </div>
+                    )}
                   </section>
 
                   <section className="detail-meter-card">

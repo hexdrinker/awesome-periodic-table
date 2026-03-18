@@ -6,6 +6,7 @@ export function LeftPanel() {
   const el = selectedElement ?? hoveredElement
   const { data: selectedDetail, isFetching, isError } = useElementDetailQuery(
     selectedElement?.atomicNumber,
+    language,
   )
   const copy = translations[language]
   const detail = selectedElement ? selectedDetail : null
@@ -18,6 +19,8 @@ export function LeftPanel() {
   const standardState = el?.standardState ?? null
   const oxidationStates = detail?.oxidationStates ?? el?.oxidationStates ?? null
   const physicalDescription = detail?.physicalDescription
+  const physicalDescriptionSourceLabel =
+    detail?.physicalDescriptionSource === 'wikipedia' ? 'Wikipedia' : 'PubChem'
 
   return (
     <div
@@ -64,6 +67,20 @@ export function LeftPanel() {
                   : isError
                     ? copy.leftPanel.detailError
                     : physicalDescription}
+                {!isFetching && !isError && physicalDescription && detail?.physicalDescriptionUrl && (
+                  <div className="mt-2">
+                    <a
+                      href={detail.physicalDescriptionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="detail-source-link"
+                    >
+                      {language === 'ko'
+                        ? `${physicalDescriptionSourceLabel}에서 보기`
+                        : `Read on ${physicalDescriptionSourceLabel}`}
+                    </a>
+                  </div>
+                )}
               </div>
             )}
           </div>
